@@ -1,0 +1,20 @@
+RDB2DC is a PHP class to convert scholarly publications from a MySQL relational
+database to DSpace's import format (which is based on Dublin Core).
+
+We are using this tool to convert data from a home-grown publications database
+into a new centralized institutional repository using DSpace.
+
+At a high level, this tool takes separate database tables such as Publications,
+Journals, Authors, and Subjects and combines that data into the full record
+for each item. It also prepares additional files and folders needed by the
+DSpace import process.
+
+Our use of this tool looks like this:
+
+- Load a copy of the relational database into MySQL on the dev server
+- Perform any needed manual data massaging/formatting
+- Alter the Select queries and format functions to match this database structure
+- Run this tool from command-line
+- Copy the resulting import/ folder to the DSpace server
+- Use the dspace command-line import tool on that import/ folder
+
