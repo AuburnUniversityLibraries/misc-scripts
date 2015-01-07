@@ -3,18 +3,22 @@
  * Converter for a scholarly works publication relational database
  * to Dublin Core files for import into DSpace
  * @author Clint Bellanger
+ * @copyright Auburn University Libraries
+ * @license GNU GPL v3 or later
  ******************************************************************************/
 include_once('inc_db.php');
 
 // CONFIGURATION
-error_reporting(E_ALL);
-ini_set('display_errors', '1');
 
-// verbose debug mode outputs additional info messages
+// debug mode, remove for  production
+// error_reporting(E_ALL);
+// ini_set('display_errors', '1');
+
+// verbose mode outputs additional information messages
 define("VERBOSE", false);
 
 // test mode does not move the PDFs
-define("TEST_MODE", true);
+define("TEST_MODE", false);
 
 // TODO: change this to a lookup of the length of the largest pub_id?
 define("FOLDER_DIGITS", 4);
@@ -33,11 +37,16 @@ class RDB2DC {
 
   // connect to the mysql database specified in inc_db.php
   function db_connect() {
+  
+    if (OPT_DB_PASS == 'passgoeshere') {
+      die ("Configure the database connection in inc_db.php. Quitting...\n");
+    }
+  
     try {
       $this->db = new PDO(OPT_DB_CONN, OPT_DB_USER, OPT_DB_PASS);
     }
     catch (PDOException $pe) {
-      echo "PDOException error: " . $pe->getMessage();
+      die ("PDOException error: " . $pe->getMessage());
     }
   }
 
@@ -77,6 +86,8 @@ class RDB2DC {
   // General File Functions
 
   function folder_name($pub_id) {
+  
+    // having folders like "0001" instead of "1" keeps item sort order
     return str_pad($pub_id, FOLDER_DIGITS, '0', STR_PAD_LEFT);
   }
 
